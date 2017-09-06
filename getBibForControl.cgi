@@ -1,6 +1,10 @@
 #!/usr/bin/perl -w
 use strict;
 
+# This application will take an input of a MARC file or plaintext file and extact unique identifiers to be queried in Voyager.
+# The identifiers are matched against the 035$a MARC field.  Voyager's BIB IDs are returned as a text list.
+# This script leverages the connection information from the ShelfLister configuration.
+
 use CGI;
 use DBI;
 use MARC::Batch;
@@ -20,14 +24,22 @@ $ENV{ORACLE_SID} = "$ShelfListerIni::oracle_sid";
 $ENV{ORACLE_HOME} = "$ShelfListerIni::oracle_home";
 
 my($myURI) = $q->url( -relative => 1 );
+my($select001) = $q->param('marcfield') && $q->param('marcfield') eq '035$a' ? '' : 'checked="checked"';
+my($select035) = $select001 ? '' : 'checked="checked"';
 my $output = <<"EOF";
-<p>Upload a MARC file containing 001 and 003 fields, or a text file containing one identifier per line to lookup matching 035\$a fields in Voyager.</p>
+<p>Upload a MARC file or a text file containing one identifier per line to lookup matching 035\$a fields in Voyager.  If using a MARC file, select which field(s) you wwant to match against existing 035\$a fields.</p>
 <form enctype="multipart/form-data" method="post" action="$myURI">
 <div>
-<label for="marcfile">MARC file</lable><input type="file" name="marcfile" />
+<label for="marcfile">MARC file</label><input id="marcfile" type="file" name="marcfile" />
 </div>
 <div>
-<label for="textfile">Text file</lable><input type="file" name="textfile" />
+<input id="marcfield_001" type="radio" name="marcfield" value="001/003" $select001 />
+<label for="marcfield_001">001 and 003</label>
+<input id="marcfield_035" type="radio" name="marcfield" value="035\$a" $select035 />
+<label for="marcfield_035">035\$a</label>
+</div>
+<div>
+<label for="textfile">Text file</label><input id="textfile" type="file" name="textfile" />
 </div>
 <div>
 <input type="submit" name="submit" value="Submit"/>
@@ -46,7 +58,15 @@ if ($q->param('submit')) {
 		if ($batch) {
 			while ( my $marc = $batch->next ) {
 				if ($marc) {
-					$extIds{$marc->field('001')->as_string()} = $marc->field('003')->as_string();
+					if ($q->param('marcfield') eq '035$a') {
+						foreach my $field ($marc->field('035')) {
+							if ($field->subfield('a') =~ /\((.+)\)(.+)/) {
+								$extIds{$2} = $1;
+							}
+						}
+					} else {
+						$extIds{$marc->field('001')->as_string()} = $marc->field('003')->as_string();
+					}
 				} else {
 					$anySkipped = 1;
 				}
@@ -113,7 +133,7 @@ if ($q->param('submit')) {
 					}
 				}
 				if ($anySuccess) {
-					$output .= '<pre>'.join("\n", @bibids).'</pre>';
+					$output = '<p class="success">Successful match for '.scalar(@bibids).' records, listed below.</p>'.$output.'<pre>'.join("\n", sort(@bibids)).'</pre>';
 					if ($anySkipped) {
 						$output = '<p class="error">One or more records were invalid in the MARC file.</p>'.$output;
 					}
