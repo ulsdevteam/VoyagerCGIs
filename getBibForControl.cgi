@@ -27,7 +27,7 @@ my($myURI) = $q->url( -relative => 1 );
 my($select001) = $q->param('marcfield') && $q->param('marcfield') eq '035$a' ? '' : 'checked="checked"';
 my($select035) = $select001 ? '' : 'checked="checked"';
 my $output = <<"EOF";
-<p>Upload a MARC file or a text file containing one identifier per line to lookup matching 035\$a fields in Voyager.  If using a MARC file, select which field(s) you wwant to match against existing 035\$a fields.</p>
+<p>Upload a MARC file or a text file containing one identifier per line to lookup matching 035\$a fields in Voyager.  If using a MARC file, select which field(s) you want to match against existing 035\$a fields.</p>
 <form enctype="multipart/form-data" method="post" action="$myURI">
 <div>
 <label for="marcfile">MARC file</label><input id="marcfile" type="file" name="marcfile" />
