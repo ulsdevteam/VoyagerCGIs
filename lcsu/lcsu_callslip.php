@@ -15,8 +15,41 @@ include "PhpNetworkLprPrinter.php";
         <head>
                 <title>LCSU Callslip</title>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+				<link rel="stylesheet" href="styles.css?v=1.0">
+				<!-- cgi-bin won't load non-executable content, so for now styles live here -->
+				<style type="text/css">
+					div.content {
+						width: 90%;
+						margin:0 auto;
+						font-family: Georgia, serif;
+						font-size: 14px;
+					}
+					div.results {
+						overflow-x: auto;
+					}
+
+					div.results table {
+						border: 1px solid black;
+						border-collapse: collapse;
+					}
+					
+					div.results tbody>tr {
+						border-top: 1px solid #a0a0a0;
+						font-family: "Lucida Console", Monaco, monospace;
+					}
+					div.results tbody>tr:nth-child(odd) {
+						background-color: #f1f1f1;
+					}
+					div.results td {
+						padding: 10px 20px;
+					}
+					div.results td.call-slip-id, div.results td.patron-id {
+						text-align: right;
+					}
+				</style>
         </head>
         <body>
+			<div class="content">
                 <h1>LCSU Callslip</h1>
 					Description:  Prints Labels for LCSU callslips.</p>
 				<form method="post" enctype="multipart/form-data">
@@ -175,9 +208,9 @@ if(isset($_POST['submit'])) {
 
 	$labelcount = 0;
 
-	print "<div style=\"overflow-x:auto;\">\n";
-	print "<table border=1 style=\"border-collapse: collapse; 1px solid black;\">\n";
-	print "<tr><th></th><th>Callslip ID</th><th>Barcode</th><th>Call No.</th><th>Patron Barcode</th><th>Patron ID</th><th>Title</th>\n";
+	print "<div class=\"results\">\n";
+	print "<table>\n";
+	print "<thead><tr><td></td><td>Callslip ID</td><td>Barcode</td><td>Call No.</td><td>Patron Barcode</td><td>Patron ID</td><td>Title</td></thead><tbody>\n";
     while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS))
     {
 
@@ -246,48 +279,15 @@ if(isset($_POST['submit'])) {
 
 		# Print to screen
 		
-	    #print "<table border=1 width=400px>\n";
-		if ( $labelcount % 2 == 0) {
-			print "<tr>\n";
-		} else {
-			print "<tr style=\"background-color: #f1f1f1\">\n";
-		}
-		print "<td style=\"paddiong:3px;text-align:right;\">$labelcount</td>\n";
-		#print "<tr><td width=125px>Tray:</td><td style=\"text-align: right;\">$traynodate</td></tr>\n";
-		#print "<tr><td>Barcode:</td><td>$barcode</td></tr>\n";
-		#print "<tr><td>Pickup:</td><td>$pickuploc</td></tr>\n";
-		print "<td style=\"padding:3px;text-align: right;\">$callslipid</td>\n";
-		print "<td style=\"padding:3px;\">$ibarcode</td>\n";
-		#print "<tr><td>Pull Date:</td><td>$today</td></tr>\n";
-		print "<td style=\"padding:3px;\">$callno</td>\n";
-		print "<td style=\"padding:3px;\">$pbarcode</td>\n";
-		print "<td style=\"padding:3px;text-align: right;\">$patron_id</td>\n";
-		print "<td style=\"padding:3px;\">$title_brief</td>\n";
-		#print "<tr><td>Wrapper:</td><td>$wrapper</td></tr>\n";
-		#print "<td style=\"padding:3px;\">$patname</td>\n";
-		#print "<tr><td>Patron Group:</td><td>$pgroup</td></tr>\n";
-		#print "<tr><td>Request Date:</td><td>$reqdate</td></tr>\n";
-		#print "<tr><td>Note:</td><td>$note1<br>$note2 </td></tr>\n";
+	    print "<tr>\n";
+		print "<td class=\"label-count\">$labelcount</td>\n";
+		print "<td class=\"call-slip-id\">$callslipid</td>\n";
+		print "<td class=\"i-barcode\">$ibarcode</td>\n";
+		print "<td class=\"call-number\">$callno</td>\n";
+		print "<td class=\"p-barcode\">$pbarcode</td>\n";
+		print "<td class=\"patron-id\">$patron_id</td>\n";
+		print "<td class=\"title-brief\">$title_brief</td>\n";
 		print "</tr>\n";
-		#print "</table>\n";
-
-		/*
-		print "Tray: $traynodate<br>\n";
-		print "Barcode: $ibarcode<br>\n";
-		print "Wrapper: $wrapper<br>\n";
-		print "Pickup Location: $pickuploc<br>\n";
-		print "Pull Date: $today<br>\n";
-		print "Request ID: $callslipid<br>\n";
-		print "Call No: $callno<br>\n";
-		print "Title: $title_brief<br>\n";
-		print "Patron: $patname<br>\n";
-		print "Patron Group: $pgroup<br>\n";
-		print "Req. Date: $reqdate<br>\n";
-		print "Note: $note1<br>\n";
-		print "      $note2<br>\n";
-		print "Patron Barcode: $pbarcode<br>\n";
-		print "---------------------------------------------------------------<br>\n";
-		*/
 
 		# Print Label
 
@@ -332,7 +332,7 @@ if(isset($_POST['submit'])) {
 
 		# End-For Loop
 	}
-	print "</table>\n";
+	print "</tbody></table>\n";
 	print "</div>\n";
 
 	print "<h2>Number of Labels: $labelcount</h2>\n";
@@ -361,6 +361,7 @@ function clean($str) {
 }
 
 ?>
-        </body>
+			</div>
+		</body>
 </html>
 
