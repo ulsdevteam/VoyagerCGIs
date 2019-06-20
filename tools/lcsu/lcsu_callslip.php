@@ -15,43 +15,12 @@ include "PhpNetworkLprPrinter.php";
         <head>
                 <title>LCSU Callslip</title>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-				<link rel="stylesheet" href="styles.css?v=1.0">
-				<!-- cgi-bin won't load non-executable content, so for now styles live here -->
-				<style type="text/css">
-					div.content {
-						width: 90%;
-						margin:0 auto;
-						font-family: Georgia, serif;
-						font-size: 14px;
-					}
-					div.results {
-						overflow-x: auto;
-					}
-
-					div.results table {
-						border: 1px solid black;
-						border-collapse: collapse;
-					}
-					
-					div.results tbody>tr {
-						border-top: 1px solid #a0a0a0;
-						font-family: "Lucida Console", Monaco, monospace;
-					}
-					div.results tbody>tr:nth-child(odd) {
-						background-color: #f1f1f1;
-					}
-					div.results td {
-						padding: 10px 20px;
-					}
-					div.results td.call-slip-id, div.results td.patron-id {
-						text-align: right;
-					}
-				</style>
+				<link rel="stylesheet" href="style.css?v=1.0">
         </head>
         <body>
 			<div class="content">
                 <h1>LCSU Callslip</h1>
-					Description:  Prints Labels for LCSU callslips.</p>
+				<p>Description:  Prints Labels for LCSU callslips.</p>
 				<form method="post" enctype="multipart/form-data">
                 <table>
 				<tr>
