@@ -196,7 +196,8 @@ while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS))
 	if (( $row['PERM_ITEM_TYPE_CODE'] == 'Nocirc' ) || 
 		($row['PERM_ITEM_TYPE_CODE'] == 'PeriodicaA') || 
 		($row['PERM_ITEM_TYPE_CODE'] == 'PeriodicaB') || 
-		($row['PERM_ITEM_TYPE_CODE'] == 'Microform') ) {
+		($row['PERM_ITEM_TYPE_CODE'] == 'Microform') ||
+		($row['PERM_ITEM_TYPE_CODE'] == 'Map') ) {
 		$wrapper = 'RED';
 	} else {
 		$wrapper = '';
