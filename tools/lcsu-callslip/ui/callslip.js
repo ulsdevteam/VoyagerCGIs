@@ -48,6 +48,14 @@ function callslips() {
 					writeCallslipError("Error loading callslips.");
 				}
 				// Always runs
+				
+				// unset loading status of reload buttons
+				var reloads = document.querySelectorAll('div.reload > button'), i;
+
+				for (i = 0; i < reloads.length; i++) {
+					var reload = reloads[i];
+					reload.classList.remove("inProgress");
+				}
 			};
 			xhr.open('GET', 'http://voystaff.library.pitt.edu/tools/lcsu-callslip/api/callslip/');
 			xhr.send();
@@ -78,13 +86,6 @@ function callslips() {
 						</tr>`
 			});
 			writeToMessage(callslipData.length + " Callslips Found");
-			
-			var reloads = document.querySelectorAll('div.reload > button'), i;
-			
-			for (i = 0; i < reloads.length; i++) {
-				var reload = reloads[i];
-				reload.classList.remove("inProgress");
-			}
 		}
 		
 		/*
