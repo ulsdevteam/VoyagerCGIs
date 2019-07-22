@@ -49,7 +49,7 @@ function callslips() {
 				}
 				// Always runs
 			};
-			xhr.open('GET', 'http://voystaff.library.pitt.edu/tools/lcsu/api/callslip/');
+			xhr.open('GET', 'http://voystaff.library.pitt.edu/tools/lcsu-callslip/api/callslip/');
 			xhr.send();
 		}
 		
@@ -186,7 +186,7 @@ function callslips() {
 				}
 				// Always runs
 			};
-			xhr.open('POST', 'http://voystaff.library.pitt.edu/tools/lcsu/api/print/');
+			xhr.open('POST', 'http://voystaff.library.pitt.edu/tools/lcsu-callslip/api/print/');
 			xhr.send();
 		}
 		
