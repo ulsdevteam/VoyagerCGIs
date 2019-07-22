@@ -45,7 +45,7 @@ div.controlBar div.reload {
 div.reload > button {
 	width: 35px;
 	height: 35px;
-	background: no-repeat center/60% url(reload.png);
+	background: no-repeat center/60% url(reload.png); /* failover for browsers that don't support multiple backgrounds */
 	background: no-repeat center/60% url(reload.png), center/100% linear-gradient(rgb(230, 230, 230), rgb(140, 140, 140));
 	border-radius: 5px;
 }

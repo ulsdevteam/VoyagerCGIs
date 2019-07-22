@@ -2,14 +2,21 @@
 /*
 LCSU CallSlip
 
-This is used by LCSU staff to print lables for LCSU Callslips.
+This is used by LCSU staff to print labels for LCSU Callslips.
 
 BDGREGG - 6/11/2019
  * Some modifications by Alex Wreschnig, 2019/06/21
 */
 
-$config = require_once("lcsu_callslip_config.inc.php");
-include "PhpNetworkLprPrinter.php";
+ini_set("display_errors","on");
+error_reporting(E_ALL);
+
+
+$config = require_once("config/lcsu_callslip_config.inc.php");
+require_once("callslip.inc.php");
+require_once("PhpNetworkLprPrinter.php");
+require_once("callslipQuery.inc.php");
+$labels = Array();
 
 
 ?><!doctype html>
@@ -17,21 +24,74 @@ include "PhpNetworkLprPrinter.php";
 	<head>
 		<meta charset="utf-8">
 		<title>LCSU Callslip</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<link rel="stylesheet" href="style.css?v=1.0">
+		<link rel="stylesheet" href="ui/callslip.css?v=1.0">
+		<script src="ui/callslip.js"></script>
 	</head>
 	<body>
 		<div class="content">
-			<div class="header">
-				<h1>LCSU Callslip Printing</h1>
-				<form method="post" enctype="multipart/form-data" class="print">
-					<input type="hidden" name="print_operation" id="print_operation" value="1"/>
-					<input type="submit" name="submit" value="Print These Labels" id="submit"/>
-				</form>
+			<h1>LCSU Callslip Printing</h1>
+			<div class="controlBar">
+				<div class="left">
+					<div class="reload">
+						<button></button>
+					</div>
+					<div class="message">
+					</div>
+				</div>
+				<div class="print-labels">
+					<button>Print These Labels</button>
+				</div>
+			</div>
+			
+			<div class="results">
+				<table>
+					<thead>
+						<tr>
+							<td class=\"label-count\"></td>
+							<td class=\"call-slip-id\">Callslip ID</td>
+							<td class=\"i-barcode\">Barcode</td>
+							<td class=\"call-number\">Call No.</td>
+							<td class=\"p-barcode\">Patron Barcode</td>
+							<td class=\"tray-address\">Tray Address</td>
+							<td class=\"title-brief\">Title</td>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<td class=\"label-count\"></td>
+							<td class=\"call-slip-id\">Callslip ID</td>
+							<td class=\"i-barcode\">Barcode</td>
+							<td class=\"call-number\">Call No.</td>
+							<td class=\"p-barcode\">Patron Barcode</td>
+							<td class=\"tray-address\">Tray Address</td>
+							<td class=\"title-brief\">Title</td>
+						</tr>
+					</tfoot>
+					<tbody>
+						<tr>
+							<td colspan="7" class="table-message">
+								Loading content...
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="controlBar">
+				<div class="left">
+					<div class="reload">
+						<button></button>
+					</div>
+					<div class="message">
+					</div>
+				</div>
+				<div class="print-labels">
+					<button>Print These Labels</button>
+				</div>
 			</div>
 
 <?php
-
+/*
 # Begin Code
 
 # Printer settings
@@ -60,103 +120,8 @@ if( $_POST['print_operation'] == "1" ) {
 } else {
 	$print_opt=0;
 }
-
-# Get list of Callslips.
-$sql = "select cs.call_slip_id,
-	cs.bib_id,
-	cs.item_id,
-	cs.mfhd_id,
-	cs.patron_id,
-	cs.patron_group_id,
-	(select pgrp.patron_group_code
-		from pittdb.patron_group pgrp
-		where pgrp.patron_group_id = cs.patron_group_id) patron_group_code,
-	to_char(cs.date_requested, 'yyyy/mm/dd hh24:mi:ss') date_requested,
-	to_char(cs.date_processed, 'yyyy/mm/dd hh24:mi:ss') date_processed,
-	cs.location_id,
-	cs.status call_slip_status,
-	(select csst.status_desc
-		from pittdb.call_slip_status_type csst
-		where csst.status_type = cs.status) call_slip_status_type,
-	to_char(cs.status_date, 'yyyy/mm/dd') status_date,
-	cs.status_opid,
-	cs.no_fill_reason,
-	cs.item_year,
-	cs.item_enum,
-	cs.item_chron,
-	cs.note,
-	cs.pickup_location_id,
-	(select l.location_code
-		from pittdb.location l
-		where l.location_id = cs.pickup_location_id) pickup_location_code,
-	(select l.location_display_name
-		from pittdb.location l
-		where l.location_id = cs.pickup_location_id) pickup_location_disp,
-	(select l.location_name
-		from pittdb.location l
-		where l.location_id = cs.pickup_location_id) pickup_location_name,
-	upper(i.spine_label) spine_label,
-	i.perm_location,
-	(select l.location_code
-		from pittdb.location l
-		where l.location_id = i.perm_location) perm_location_code,
-	i.temp_location,
-	(select l.location_code
-		from pittdb.location l
-		where l.location_id = i.temp_location) temp_location_code,
-	i.item_type_id perm_item_type_id,
-	(select it.item_type_code
-		from pittdb.item_type it, pittdb.item i
-		where it.item_type_id = i.item_type_id
-		and i.item_id = cs.item_id) perm_item_type_code,
-	i.temp_item_type_id,
-	(select it.item_type_code
-		from pittdb.item_type it, pittdb.item i
-		where it.item_type_id = i.temp_item_type_id
-		and i.item_id = cs.item_id) temp_item_type_code,
-	mm.location_id,
-	(select l.location_code
-		from pittdb.location l
-		where l.location_id = mm.location_id) mfhd_location_code,
-	mm.display_call_no,
-	ib.item_barcode,
-	p.last_name,
-	p.first_name,
-	p.middle_name,
-	(select pb.patron_barcode
-		from pittdb.patron_barcode pb
-		where pb.patron_id = cs.patron_id
-		and pb.barcode_status = 1
-		fetch first 1 rows only) patron_barcode,
-	bt.author,
-	bt.title,
-	substr(bt.title_brief,1,30) title_brief,
-	(select pa.address_line1
-		from pittdb.patron_address pa
-		where pa.patron_id = cs.patron_id
-		and pa.address_type = 2
-		fetch first 1 rows only) patron_campus_address,
-	(select pp.phone_number
-		from pittdb.patron_phone pp,
-			pittdb.patron_address pa
-		where pp.address_id = pa.address_id
-		and pa.patron_id = cs.patron_id
-		and pa.address_type = 2
-		fetch first 1 rows only) patron_campus_phone,
-	(select count(*)
-		from pittdb.mfhd_item mi
-		where mi.mfhd_id = cs.mfhd_id) mfhd_item_count
-from pittdb.call_slip cs
-left join pittdb.item i on i.item_id = cs.item_id
-left join pittdb.mfhd_master mm on mm.mfhd_id = cs.mfhd_id
-left outer join pittdb.item_barcode ib on ib.item_id = cs.item_id and ib.barcode_status = 1
-left join pittdb.patron p on p.patron_id = cs.patron_id
-left join pittdb.bib_text bt on bt.bib_id = cs.bib_id
-where
-	cs.print_group_id = '20' 
-	and cs.status in (1,3) 
-order by i.spine_label";	
-
+*/
+/*
 $stid = oci_parse($GLOBALS['conn'],$sql);
 oci_execute($stid);
 
@@ -165,10 +130,13 @@ $labelcount = 0;
 print "<div class=\"results\">\n";
 print "<table>\n";
 print "<thead><tr><td class=\"label-count\"></td><td class=\"call-slip-id\">Callslip ID</td><td class=\"i-barcode\">Barcode</td>"
-		."<td class=\"call-number\">Call No.</td><td class=\"p-barcode\">Patron Barcode</td><td class=\"patron-id\">Patron ID</td>"
+		."<td class=\"call-number\">Call No.</td><td class=\"p-barcode\">Patron Barcode</td><td class=\"tray-address\">Tray Address</td>"
 		."<td class=\"title-brief\">Title</td></thead><tbody>\n";
 while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS))
 {
+	echo "<!--";
+	print_r($row);
+	echo "-->";
 
 	# For each row in array do...
 	$labelcount++;
@@ -242,13 +210,13 @@ while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS))
 	print "<td class=\"i-barcode\">$ibarcode</td>\n";
 	print "<td class=\"call-number\">$callno</td>\n";
 	print "<td class=\"p-barcode\">$pbarcode</td>\n";
-	print "<td class=\"patron-id\">$patron_id</td>\n";
+	print "<td class=\"tray-address\">$traynodate</td>\n";
 	print "<td class=\"title-brief\">$title_brief</td>\n";
 	print "</tr>\n";
 
 	# Print Label
 
-	# Beting Label Production 
+	# Begin Label Production 
 	$q01 = "{^A^PS^WKCall Slip 4.lbl^%0";
 	$q02 = "^H0080^V0007^L0101^P02^WL0$traynodate^%0";
 	$q03 = "^H0008^V0224^FW02H0595^%0";
@@ -271,26 +239,13 @@ while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS))
 	$q20 = "^H0008^V0515^L0202^P02^XU$note1^%0";
 	$q21 = "^H0009^V0462^L0202^P02^XU$pbarcode";
 	$q22 = "^~A0^Q1^Z}";	
-	$satolabel = $q01.$q02.$q03.$q04.$q05.$q06.$q07.$q08.$q09.$q10.$q11.$q12.$q13.$q14.$q15.$q16.$q17.$q18.$q19.$q20.$q21.$q22;
+	$labels[] = $q01.$q02.$q03.$q04.$q05.$q06.$q07.$q08.$q09.$q10.$q11.$q12.$q13.$q14.$q15.$q16.$q17.$q18.$q19.$q20.$q21.$q22;
 	# End Label Production 
-
-	# Do the actual printing.	
-	if ( $print_opt == '1' ) {
-		$lpr = new PhpNetworkLprPrinter($printer, $port, $queue);
-		if ($lpr->getErrStr()) {
-			print "<td>Error: ".$lpr->getErrStr()."</td>\n";
-		} else {
-			#print "<td>OK\n";
-		}
-		if($lpr) {
-			$lpr->printText($satolabel);
-		}
-	}
-
-	# End-For Loop
-}
+}	// end For-Loop
 print "</tbody></table>\n";
 print "</div>\n";
+
+printCallslips($labels);
 
 print "<h2>Number of Labels: $labelcount</h2>\n";
 
@@ -302,6 +257,14 @@ if ( $print_opt == '1' ) {
 
 oci_free_statement($stid);
 oci_close($conn);
+*/
+
+?>
+		</div>
+	</body>
+</html>
+
+<?php
 
 function clean($str) {
 	# As defined here: https://www.php.net/manual/en/filter.filters.sanitize.php
@@ -314,8 +277,19 @@ function clean($str) {
 	return $ret;
 }
 
-?>
-		</div>
-	</body>
-</html>
 
+function printCallslips($array) {
+	$lpr = new PhpNetworkLprPrinter($printer, $port, $queue);
+	if ($lpr->getErrStr()) {
+		print "Error: ".$lpr->getErrStr()."\n";
+	} else {
+		//print "<td>OK\n";
+	}
+	if($lpr) {
+		foreach($array as $label) {
+			$lpr->printText($satolabel);
+		}
+	}
+}
+
+?>
