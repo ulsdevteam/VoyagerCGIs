@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>LCSU Callslip</title>
+		<link rel="stylesheet" href="ui/callslip.css?v=1.0">
+		<script src="ui/callslip.js?v=1.0"></script>
+	</head>
+	<body>
+		<div class="content">
+			<h1>LCSU Callslip Printing</h1>
+			<div class="controlBar">
+				<div class="left">
+					<div class="reload">
+						<button></button>
+					</div>
+					<div class="message">
+					</div>
+				</div>
+				<div class="print-labels">
+					<button>Print These Labels</button>
+				</div>
+			</div>
+			
+			<div class="results">
+				<table>
+					<thead>
+						<tr>
+							<td class=\"label-count\"></td>
+							<td class=\"call-slip-id\">Callslip ID</td>
+							<td class=\"i-barcode\">Barcode</td>
+							<td class=\"call-number\">Call No.</td>
+							<td class=\"p-barcode\">Patron Barcode</td>
+							<td class=\"tray-address\">Tray Address</td>
+							<td class=\"title-brief\">Title</td>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<td class=\"label-count\"></td>
+							<td class=\"call-slip-id\">Callslip ID</td>
+							<td class=\"i-barcode\">Barcode</td>
+							<td class=\"call-number\">Call No.</td>
+							<td class=\"p-barcode\">Patron Barcode</td>
+							<td class=\"tray-address\">Tray Address</td>
+							<td class=\"title-brief\">Title</td>
+						</tr>
+					</tfoot>
+					<tbody>
+						<tr>
+							<td colspan="7" class="table-message">
+								Loading content...
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="controlBar">
+				<div class="left">
+					<div class="reload">
+						<button></button>
+					</div>
+					<div class="message">
+					</div>
+				</div>
+				<div class="print-labels">
+					<button>Print These Labels</button>
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>

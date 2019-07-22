@@ -12,8 +12,6 @@
  * fields.
  */
 
-require_once("PhpNetworkLprPrinter.php");
-
 class Callslip {
 	
 	/*
@@ -109,6 +107,9 @@ class Callslip {
 			$this->_components['tray_no_date'] = 'Invalid Tray';
 		}
 		
+		// build a callslip label
+		$this->_buildCallslipLabel();
+		
 	}
 	
 	/**
@@ -175,19 +176,5 @@ class Callslip {
 	
 	function getAllComponents() {
 		return $this->_components;
-	}
-	
-	function printCallslip() {
-		$printer = $config["printer_path"];
-		$port = $config["printer_port"];
-		$queue = $config["printer_queue"];
-		$lpr = new PhpNetworkLprPrinter($printer, $port, $queue);
-
-		if ($lpr->getErrStr()) {
-			return "Error: ".$lpr->getErrStr();
-		}
-		if($lpr) {
-			$lpr->printText($this->_label);
-		}
 	}
 }

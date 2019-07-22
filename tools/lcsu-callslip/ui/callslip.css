@@ -46,8 +46,18 @@ div.reload > button {
 	width: 35px;
 	height: 35px;
 	background: no-repeat center/60% url(reload.png); /* failover for browsers that don't support multiple backgrounds */
-	background: no-repeat center/60% url(reload.png), center/100% linear-gradient(rgb(230, 230, 230), rgb(140, 140, 140));
+	background: no-repeat center/60% url(reload.png), center/100% linear-gradient(rgb(255, 255, 255), rgb(200, 200, 200));
 	border-radius: 5px;
+}
+
+div.reload > button:hover {
+	background: no-repeat center/60% url(reload.png); /* failover for browsers that don't support multiple backgrounds */
+	background: no-repeat center/60% url(reload.png), center/100% linear-gradient(rgb(255, 255, 255), rgb(240, 240, 240));
+}
+
+div.reload > button.inProgress {
+	background: no-repeat center/60% url(spinner.gif); /* failover for browsers that don't support multiple backgrounds */
+	background: no-repeat center/60% url(spinner.gif), center/100% linear-gradient(rgb(255, 255, 255), rgb(240, 240, 240));
 }
 
 div.controlBar div.message {
@@ -70,6 +80,20 @@ div.controlBar > div.print-labels > button {
 	border-left: 3px solid rgb(220, 220, 220);
 	border-bottom: 3px solid rgb(160, 160, 160);
 	border-right: 3px solid rgb(160, 160, 160);
+	width: 300px;
+}
+
+div.controlBar > div.print-labels > button.printing {
+	background-color: rgb(40, 40, 40);
+	color: white;
+}
+
+div.controlBar > div.print-labels > button:hover {
+	background-color: rgb(0, 100, 0);
+}
+
+div.controlBar > div.print-labels > button.printing:hover {
+	background-color: rgb(70, 70, 70);
 }
 
 div.results {
@@ -97,10 +121,11 @@ div.results tbody>tr:nth-child(odd) {
 div.results td {
 	padding: 10px 20px;
 }
-div.results td.label-count, div.results td.call-slip-id, div.results td.patron-id {
+div.results td.label-count, div.results td.patron-id {
 	text-align: right;
 }
 
-form #submit:hover {
-	background-color: rgb(0, 100, 0);
+div.results td.call-slip-id {
+	text-align: center;
 }
+

@@ -41,11 +41,11 @@ function callslips() {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					// Success
 					var data = JSON.parse(xhr.responseText);
-					console.log(data);
 					writeCallslipsToScreen(data);
-					console.log("Here!");
 				} else {
 					// Failure
+					console.log(data);
+					writeCallslipError("Error loading callslips.");
 				}
 				// Always runs
 			};
@@ -76,9 +76,15 @@ function callslips() {
 							<td class="tray-address">${callslip.tray_no_date}</td>
 							<td class="title-brief">${callslip.title_brief}</td>
 						</tr>`
-				console.log(callslip);
 			});
 			writeToMessage(callslipData.length + " Callslips Found");
+			
+			var reloads = document.querySelectorAll('div.reload > button'), i;
+			
+			for (i = 0; i < reloads.length; i++) {
+				var reload = reloads[i];
+				reload.classList.remove("inProgress");
+			}
 		}
 		
 		/*
@@ -96,6 +102,12 @@ function callslips() {
 							<td colspan="7" class="table-message">
 								Loading content...
 							</td>`
+			}
+			var reloads = document.querySelectorAll('div.reload > button'), i;
+			
+			for (i = 0; i < reloads.length; i++) {
+				var reload = reloads[i];
+				reload.classList.add("inProgress");
 			}
 		}
 		
@@ -129,9 +141,7 @@ function callslips() {
 		 * Side effects: writes a message to screen.
 		 */
 		function writeToMessage(message) {
-			console.log("And also here!");
 			var fields = document.querySelectorAll('.message'), i;
-			console.log(fields);
 			
 			for (i = 0; i < fields.length; i++) {
 				var field = fields[i];
@@ -148,7 +158,46 @@ function callslips() {
 		 * Side effects: calls the API to print callslips.
 		 */
 		function printCallslips() {
-			console.log("Printing callslips!");
+			var printButton = document.querySelector('div.print-labels > button');
+			if(printButton.classList.contains('printing')) {
+				return;
+			}
+			
+			var printButtons = document.querySelectorAll('div.print-labels > button'), i;
+
+			for (i = 0; i < printButtons.length; i++) {
+				var printButton = printButtons[i];
+				printButton.classList.add("printing");
+				printButton.innerHTML = "Printing...";
+			}
+
+			var xhr = new XMLHttpRequest();
+			xhr.onload = function () {
+				// Process our return data
+				if (xhr.status >= 200 && xhr.status < 300) {
+					// Success
+					window.setTimeout(resetPrintButtons, 1000);
+				} else {
+					// Failure
+					var data = JSON.parse(xhr.responseText);
+					console.log(data);
+					writeCallslipError("Error printing callslips.");
+					resetPrintButtons();
+				}
+				// Always runs
+			};
+			xhr.open('POST', 'http://voystaff.library.pitt.edu/tools/lcsu/api/print/');
+			xhr.send();
+		}
+		
+		function resetPrintButtons() {
+			var printButtons = document.querySelectorAll('div.print-labels > button'), i;
+
+			for (i = 0; i < printButtons.length; i++) {
+				var printButton = printButtons[i];
+				printButton.classList.remove("printing");
+				printButton.innerHTML = "Print These Labels";
+			}
 		}
 		
 		/*
