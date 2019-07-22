@@ -13,9 +13,9 @@ error_reporting(E_ALL);
 
 
 $config = require_once("config/lcsu_callslip_config.inc.php");
-require_once("callslip.inc.php");
-require_once("PhpNetworkLprPrinter.php");
-require_once("callslipQuery.inc.php");
+require_once("classes/callslip.inc.php");
+require_once("classes/PhpNetworkLprPrinter.php");
+require_once("config/callslipQuery.inc.php");
 $labels = Array();
 
 

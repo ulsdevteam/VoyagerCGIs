@@ -5,9 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-$config = require_once("../config/lcsu_callslip_config.inc.php");
-require_once("../callslipQuery.inc.php");
-require_once("../callslip.inc.php");
+$config = require_once("../../config/lcsu_callslip_config.inc.php");
+require_once("../../config/callslipQuery.inc.php");
+require_once("../../classes/callslip.inc.php");
 
 $printer = $config["printer_path"];
 $port = $config["printer_port"];
