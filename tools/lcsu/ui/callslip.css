@@ -1,0 +1,106 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 20, 2019, 5:14:36 PM
+    Author     : asw76
+*/
+
+div.content {
+	width: 90%;
+	margin:0 auto;
+	font-family: Georgia, serif;
+	font-size: 14px;
+}
+
+h1 {
+	font-size: 60px;
+	margin: 0 0 10px;
+}
+
+div.controlBar {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+div.controlBar:nth-child(4) {
+	align-items: flex-start;
+}
+
+div.controlBar > div.left {
+	flex-grow: 9;
+}
+
+div.controlBar div.reload {
+	float: left;
+	margin-right: 10px;
+}
+
+div.reload > button {
+	width: 35px;
+	height: 35px;
+	background: no-repeat center/60% url(reload.png);
+	background: no-repeat center/60% url(reload.png), center/100% linear-gradient(rgb(230, 230, 230), rgb(140, 140, 140));
+	border-radius: 5px;
+}
+
+div.controlBar div.message {
+	text-align: left;
+	font-size: 24px;
+}
+div.controlBar > div.print-labels {
+	flex-grow: 1;
+	text-align: right;
+}
+
+div.controlBar > div.print-labels > button {
+	background-color: rgb(0, 70, 0);
+	color: white;
+	border-radius: 10px;
+	font-size: 20px;
+	padding: 10px 30px;
+	cursor: pointer;
+	border-top: 3px solid rgb(220, 220, 220);
+	border-left: 3px solid rgb(220, 220, 220);
+	border-bottom: 3px solid rgb(160, 160, 160);
+	border-right: 3px solid rgb(160, 160, 160);
+}
+
+div.results {
+	overflow-x: auto;
+}
+
+div.results table {
+	border: 1px solid black;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+div.results thead, div.results tfoot {
+	font-size: 16px;
+	font-weight: 900;
+}
+
+div.results tbody>tr {
+	border-top: 1px solid #a0a0a0;
+	font-family: "Lucida Console", Monaco, monospace;
+}
+div.results tbody>tr:nth-child(odd) {
+	background-color: rgb(242, 242, 242);
+}
+div.results td {
+	padding: 10px 20px;
+}
+div.results td.label-count, div.results td.call-slip-id, div.results td.patron-id {
+	text-align: right;
+}
+
+form #submit:hover {
+	background-color: rgb(0, 100, 0);
+}
