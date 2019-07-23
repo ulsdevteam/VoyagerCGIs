@@ -57,7 +57,7 @@ function callslips() {
 					reload.classList.remove("inProgress");
 				}
 			};
-			xhr.open('GET', 'http://voystaff.library.pitt.edu/tools/lcsu-callslip/api/callslip/');
+			xhr.open('GET', '/tools/lcsu-callslip/api/callslip/');
 			xhr.send();
 		}
 		
@@ -187,7 +187,7 @@ function callslips() {
 				}
 				// Always runs
 			};
-			xhr.open('POST', 'http://voystaff.library.pitt.edu/tools/lcsu-callslip/api/print/');
+			xhr.open('POST', '/tools/lcsu-callslip/api/print/');
 			xhr.send();
 		}
 		
