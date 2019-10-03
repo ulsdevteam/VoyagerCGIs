@@ -95,7 +95,7 @@ class Callslip {
 		$this->_components['note_part_2'] = '';
 		if (strlen($this->_components['note']) > 40 ) {
 			$this->_components['note_part_1'] = substr($this->_components['note'],0,40);
-			$this->_components['note_part_2'] = substr($this->_components['note'],41,40);
+			$this->_components['note_part_2'] = substr($this->_components['note'],40,40);
 		} else {
 			$this->_components['note_part_1'] = $this->_components['note'];
 		}
