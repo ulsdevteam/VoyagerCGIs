@@ -51,19 +51,18 @@ class Callslip {
 		$this->_components['patron_group_code'] = $components['PATRON_GROUP_CODE'];
 		$this->_components['request_date'] = $components['DATE_REQUESTED'];
 		$this->_components['patron_barcode'] = $components['PATRON_BARCODE'];
-
-		// set variables needing basic cleanup
-		$this->_components['title'] = $this->_clean($components['TITLE']);
-		$this->_components['title_brief'] = $this->_clean($components['TITLE_BRIEF']);
-		$this->_components['author'] = $this->_clean($components['AUTHOR']);
-		$this->_components['note'] = $this->_clean($components['NOTE']);
-		$this->_components['tray'] = $this->_clean($components['SPINE_LABEL']);
-		$this->_components['itemyr'] = $this->_clean($components['ITEM_YEAR']);
-		$this->_components['itemchron'] = $this->_clean($components['ITEM_CHRON']);
-		$this->_components['patron_name_first'] = $this->_clean($components['FIRST_NAME']);
-		$this->_components['patron_name_middle'] = $this->_clean($components['MIDDLE_NAME']);
-		$this->_components['patron_name_last'] = $this->_clean($components['LAST_NAME']);
-		$this->_components['patron_id'] = $this->_clean($components['PATRON_ID']);
+		$this->_components['title_brief'] = $components['TITLE_BRIEF'];
+		$this->_components['title'] = $components['TITLE'];
+		$this->_components['title_brief'] = $components['TITLE_BRIEF'];
+		$this->_components['author'] = $components['AUTHOR'];
+		$this->_components['note'] = $components['NOTE'];
+		$this->_components['tray'] = $components['SPINE_LABEL'];
+		$this->_components['itemyr'] = $components['ITEM_YEAR'];
+		$this->_components['itemchron'] = $components['ITEM_CHRON'];
+		$this->_components['patron_name_first'] = $components['FIRST_NAME'];
+		$this->_components['patron_name_middle'] = $components['MIDDLE_NAME'];
+		$this->_components['patron_name_last'] = $components['LAST_NAME'];
+		$this->_components['patron_id'] = $components['PATRON_ID'];
 
 		// determine wrapper color if any
 		if (( $components['PERM_ITEM_TYPE_CODE'] == 'Nocirc' ) || 
@@ -118,26 +117,26 @@ class Callslip {
 	 */
 	function _buildCallslipLabel() {
 		$q01 = "{^A^PS^WKCall Slip 4.lbl^%0";
-		$q02 = "^H0080^V0007^L0101^P02^WL0".$this->_components['tray_no_date']."^%0";
+		$q02 = "^H0080^V0007^L0101^P02^WL0".$this->getComponent('tray_no_date', false)."^%0";
 		$q03 = "^H0008^V0224^FW02H0595^%0";
 		$q04 = "^H0005^V0509^FW02H0595^%0";
 		$q05 = "^H0009^V0408^FW02H0595^%0";
 		$q06 = "^H0009^V0179^FW02H0595^%0";
 		$q07 = "^H0008^V0064^FW02H0595^%0";
-		$q08 = "^H0095^V0075^L0101^P02^WL0".$this->_components['item_barcode']."^%0";
-		$q09 = "^H0034^V0127^B102044*".$this->_components['item_barcode']."*^%0";
-		$q10 = "^H0428^V0383^L0202^P02^XU".$this->_components['wrapper']."^%0";
-		$q11 = "^H0022^V0185^L0202^P02^XS".$this->_components['pickup_location']."^%0";
-		$q12 = "^H0009^V0257^L0202^P02^XUPull Date:  ".$this->_components['today']."^%0";
-		$q13 = "^H0009^V0233^L0202^P02^XURequest ID: ".$this->_components['callslip_id']."^%0";
-		$q14 = "^H0009^V0281^L0202^P02^XUCall No.:   ".$this->_components['call_number']."^%0";
-		$q15 = "^H0009^V0306^L0202^P02^XUTitle: ".$this->_components['title_brief']."^%0";
-		$q16 = "^H0009^V0416^L0202^P02^XU".$this->_components['patron_name_full']."^%0";
-		$q17 = "^H0009^V0439^L0202^P02^XU".$this->_components['patron_group_code']."^%0";
-		$q18 = "^H0009^V0486^L0202^P02^XUReq. Date: ".$this->_components['request_date']."^%0";
-		$q19 = "^H0008^V0536^L0202^P02^XU".$this->_components['note_part_2']."^%0";
-		$q20 = "^H0008^V0515^L0202^P02^XU".$this->_components['note_part_1']."^%0";
-		$q21 = "^H0009^V0462^L0202^P02^XU".$this->_components['patron_barcode'];
+		$q08 = "^H0095^V0075^L0101^P02^WL0".$this->getComponent('item_barcode', false)."^%0";
+		$q09 = "^H0034^V0127^B102044*".$this->getComponent('item_barcode', false)."*^%0";
+		$q10 = "^H0428^V0383^L0202^P02^XU".$this->getComponent('wrapper', false)."^%0";
+		$q11 = "^H0022^V0185^L0202^P02^XS".$this->getComponent('pickup_location', false)."^%0";
+		$q12 = "^H0009^V0257^L0202^P02^XUPull Date:  ".$this->getComponent('today', false)."^%0";
+		$q13 = "^H0009^V0233^L0202^P02^XURequest ID: ".$this->getComponent('callslip_id', false)."^%0";
+		$q14 = "^H0009^V0281^L0202^P02^XUCall No.:   ".$this->getComponent('call_number', false)."^%0";
+		$q15 = "^H0009^V0306^L0202^P02^XUTitle: ".$this->getComponent('title_brief', false)."^%0";
+		$q16 = "^H0009^V0416^L0202^P02^XU".$this->getComponent('patron_name_full', false)."^%0";
+		$q17 = "^H0009^V0439^L0202^P02^XU".$this->getComponent('patron_group_code', false)."^%0";
+		$q18 = "^H0009^V0486^L0202^P02^XUReq. Date: ".$this->getComponent('request_date', false)."^%0";
+		$q19 = "^H0008^V0536^L0202^P02^XU".$this->getComponent('note_part_2', false)."^%0";
+		$q20 = "^H0008^V0515^L0202^P02^XU".$this->getComponent('note_part_1', false)."^%0";
+		$q21 = "^H0009^V0462^L0202^P02^XU".$this->getComponent('patron_barcode', false);
 		$q22 = "^~A0^Q1^Z}";	
 
 		$this->_label = $q01.$q02.$q03.$q04.$q05.$q06.$q07.$q08.$q09.$q10.$q11.$q12.$q13.$q14.$q15.$q16.$q17.$q18.$q19.$q20.$q21.$q22;
@@ -166,7 +165,10 @@ class Callslip {
 		return $this->_label;
 	}
 	
-	function getComponent($componentName) {
+	function getComponent($componentName, $clean=true) {
+		if($clean) {
+			return $this->_clean($this->_components[$componentName]);
+		}
 		return $this->_components[$componentName];
 	}
 	
@@ -174,7 +176,21 @@ class Callslip {
 		return array_keys($this->_components);
 	}
 	
-	function getAllComponents() {
-		return $this->_components;
+	function getAllComponents($clean = true) {
+		$components = $this->_components;
+		if($clean) {
+			$components['title'] = $this->_clean($components['title']);
+			$components['title_brief'] = $this->_clean($components['title_brief']);
+			$components['author'] = $this->_clean($components['author']);
+			$components['note'] = $this->_clean($components['note']);
+			$components['tray'] = $this->_clean($components['tray']);
+			$components['itemyr'] = $this->_clean($components['itemyr']);
+			$components['itemchron'] = $this->_clean($components['itemchron']);
+			$components['patron_name_first'] = $this->_clean($components['patron_name_first']);
+			$components['patron_name_middle'] = $this->_clean($components['patron_name_middle']);
+			$components['patron_name_last'] = $this->_clean($components['patron_name_last']);
+			$components['patron_id'] = $this->_clean($components['patron_id']);
+		}
+		return $components;
 	}
 }

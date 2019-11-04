@@ -1,4 +1,4 @@
-<?php
+o<?php
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
@@ -44,7 +44,7 @@ if($lpr) {
 	while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
 		$temporaryCallslip = new Callslip($row);
 		$lpr->printText($temporaryCallslip->getLabel());
-		$response['callslipsPrinted'][] = $temporaryCallslip->getAllComponents();
+		$response['callslipsPrinted'][] = $temporaryCallslip->getAllComponents(true);
 	}
 }
 header('Content-Type: application/json', TRUE, 200);

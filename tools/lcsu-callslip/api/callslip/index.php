@@ -31,7 +31,7 @@ $temporaryCallslip = null;
 
 while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
 	$temporaryCallslip = new Callslip($row);
-	$jsonBuilder[] = $temporaryCallslip->getAllComponents();
+	$jsonBuilder[] = $temporaryCallslip->getAllComponents(true);
 }
 header('Content-Type: application/json');
 echo json_encode($jsonBuilder);
